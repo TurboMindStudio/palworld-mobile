@@ -1,0 +1,2 @@
+# palworld mobile
+ 
