@@ -10,4 +10,6 @@ public class pokeball : Interactable
         GameManager.Instance.pokeBallCountText.text = GameManager.Instance.pokeBallCount.ToString();
         Destroy(gameObject);
     }
+
+
 }

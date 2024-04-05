@@ -6,6 +6,8 @@ TagManager:
   tags:
   - wayPoints
   - pokeball
+  - Pals
+  - environmet
   layers:
   - Default
   - TransparentFX

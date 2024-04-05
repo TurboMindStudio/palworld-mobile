@@ -38,7 +38,7 @@ public class PlayerInteract : MonoBehaviour
                     interactable.baseInteract();
                 }
 
-                hit.collider.GetComponent<Outline>().enabled = true;
+                //hit.collider.GetComponent<Outline>().enabled = true;
             }
         }
         else

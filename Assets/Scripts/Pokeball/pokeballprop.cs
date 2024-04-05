@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class pokeballprop : MonoBehaviour
 {
-    [SerializeField] float throwSpeed;
-    private Rigidbody rb;
-
-    private void Start()
+    [SerializeField] GameObject captureParticle;
+    private void OnCollisionEnter(Collision other)
     {
-        rb = GetComponent<Rigidbody>();
-    }
-    private void Update()
-    {
-        rb.AddForce(transform.right*throwSpeed*Time.deltaTime);
+        if (other.gameObject.CompareTag("Pals"))
+        {
+            Debug.Log("capture");
+            Destroy(other.gameObject);
+            audioManager.instance.source.PlayOneShot(audioManager.instance.pokeballElectricCap);
+            audioManager.instance.source.PlayOneShot(audioManager.instance.pokeballCapture);
+            Instantiate(captureParticle,transform.position, Quaternion.identity);
+        }
     }
 }

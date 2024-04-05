@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,8 +12,13 @@ public class PokeballShoot : MonoBehaviour
     public Transform shootPoint;
     public Button button;
 
-    private float fireRate;
+    private float fireRate = 0;
+    public float fireTime;
+    private RaycastHit hit;
+    private Ray ray;
 
+    [SerializeField] Image pokeballImg;
+    [SerializeField] TextMeshProUGUI pokeTimer;
     private void Start()
     {
        // button = GetComponent<Button>();
@@ -22,6 +28,18 @@ public class PokeballShoot : MonoBehaviour
     private void Update()
     {
         fireRate -= Time.deltaTime;
+        int fireRateToInt=Mathf.FloorToInt(fireRate);
+        if( fireRate < 0)
+        {
+            pokeballImg.color = Color.white;
+            pokeTimer.text = string.Empty;
+        }
+        else
+        {
+            pokeballImg.color = Color.gray;
+            pokeTimer.text = fireRateToInt.ToString();
+        }
+
     }
 
     void ShootFireball()
@@ -29,18 +47,26 @@ public class PokeballShoot : MonoBehaviour
         if (fireRate <= 0)
         {
             InstantiateFireball();
-            fireRate = 2;
+            fireRate = fireTime;
         }
     }
 
     void InstantiateFireball()
     {
-        GameObject fireball = Instantiate(fireballPrefab, shootPoint.position, Quaternion.identity);
-        Rigidbody rb = fireball.GetComponent<Rigidbody>();
-        if (rb != null)
+        ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
-            rb.AddForce(shootPoint.forward * fireballSpeed,ForceMode.Impulse);
+            audioManager.instance.source.PlayOneShot(audioManager.instance.pokeballThrow);
+            GameObject fireball = Instantiate(fireballPrefab, shootPoint.position, Quaternion.identity);
+            Rigidbody rb = fireball.GetComponent<Rigidbody>();
 
+            if (rb != null)
+            {
+
+                Vector3 direction = hit.point - Camera.main.transform.position;
+                rb.AddForce(direction.normalized * fireballSpeed,ForceMode.Impulse);
+
+            }
         }
     }
 }
